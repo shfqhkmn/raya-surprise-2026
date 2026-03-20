@@ -124,7 +124,7 @@
         you, me, and every cafe we've ever talked about! 🍜🍰
       </p>
     </div>
-
+    <audio id="raya-song" src="lagu-raya.mp3"></audio>
     <script>
       const unlockDate = new Date("March 21, 2026 08:00:00").getTime();
 
@@ -160,8 +160,14 @@
       setInterval(updateTimer, 1000);
       updateTimer();
 
-      function revealSurprise() {
+     function revealSurprise() {
+        // 1. Play the Raya song!
+        document.getElementById("raya-song").play();
+
+        // 2. Reveal the food-hunting message
         document.getElementById("surprise").classList.remove("hidden");
+
+        // 3. Trigger the double-cannon confetti
         const duration = 5 * 1000;
         const animationEnd = Date.now() + duration;
         const defaults = {
