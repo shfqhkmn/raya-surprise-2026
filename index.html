@@ -58,22 +58,35 @@
     </style>
   </head>
   <body class="min-h-screen flex items-center justify-center p-4">
+    <audio id="raya-song" src="lagu-raya.mp3"></audio>
+
     <div id="lock-screen">
       <div
-        class="p-8 glass rounded-3xl max-w-sm mx-4 border-yellow-500/30 text-white"
+        class="p-8 glass rounded-3xl max-w-sm mx-4 border-yellow-500/30 text-white flex flex-col items-center"
       >
         <div class="text-6xl mb-4">🍱</div>
-        <h2 class="romantic-font text-4xl text-yellow-400 mb-4">
+        <h2 id="lock-title" class="romantic-font text-4xl text-yellow-400 mb-4">
           Sabar Jap, Sayang...
         </h2>
-        <p class="opacity-80 mb-6">
+        <p id="lock-subtitle" class="opacity-80 mb-6">
           Something delicious is waiting for you. This surprise only unlocks
           tomorrow at 8:00 AM!
         </p>
-        <div id="countdown" class="timer-font mb-2">00:00:00</div>
-        <p class="text-xs text-yellow-500/60 uppercase tracking-widest">
-          Until the big reveal
-        </p>
+
+        <div id="countdown-container">
+          <div id="countdown" class="timer-font mb-2">00:00:00</div>
+          <p class="text-xs text-yellow-500/60 uppercase tracking-widest">
+            Until the big reveal
+          </p>
+        </div>
+
+        <button
+          id="enter-btn"
+          onclick="enterSite()"
+          class="hidden mt-2 px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-emerald-900 font-bold rounded-full transition-all transform hover:scale-105 shadow-xl text-lg"
+        >
+          Buka Sekarang Baby 💌
+        </button>
       </div>
     </div>
 
@@ -102,7 +115,7 @@
       <div class="space-y-4">
         <p class="italic text-sm opacity-90">
           "Another Raya with you is the greatest blessing. Maaf Zahir & Batin
-          for everything, sayang. Thank you for being by my side."
+          for everything my baby sayang. Thank you for being by my side."
         </p>
         <div class="h-px bg-white/20 w-1/2 mx-auto"></div>
         <p class="font-semibold text-xl text-yellow-400">I Love You ❤️</p>
@@ -124,22 +137,25 @@
         you, me and every cafe we've ever talked about! 🍜🍰
       </p>
     </div>
-    <audio id="raya-song" src="lagu-raya.mp3"></audio>
+
     <script>
       const unlockDate = new Date("March 21, 2026 08:00:00").getTime();
+      let timerInterval;
 
       function updateTimer() {
         const now = new Date().getTime();
         const distance = unlockDate - now;
 
         if (distance <= 0) {
-          const ls = document.getElementById("lock-screen");
-          if (ls) {
-            ls.style.opacity = "0";
-            setTimeout(() => {
-              ls.style.display = "none";
-            }, 1000);
-          }
+          clearInterval(timerInterval); // Stop the clock
+
+          // Hide countdown, update text, and show the entry button
+          document.getElementById("countdown-container").style.display = "none";
+          document.getElementById("lock-title").innerText =
+            "Yay! Dah Boleh Buka 🎉";
+          document.getElementById("lock-subtitle").innerText =
+            "Your Raya surprise is ready!";
+          document.getElementById("enter-btn").classList.remove("hidden");
           return;
         }
 
@@ -157,17 +173,25 @@
           (seconds < 10 ? "0" + seconds : seconds);
       }
 
-      setInterval(updateTimer, 1000);
+      timerInterval = setInterval(updateTimer, 1000);
       updateTimer();
 
-     function revealSurprise() {
-        // 1. Play the Raya song!
-        document.getElementById("raya-song").play();
+      // Triggered when she clicks "Buka Sekarang Sayang 💌"
+      function enterSite() {
+        const ls = document.getElementById("lock-screen");
+        if (ls) {
+          ls.style.opacity = "0";
+          setTimeout(() => {
+            ls.style.display = "none";
+          }, 1000);
+        }
+      }
 
-        // 2. Reveal the food-hunting message
+      // Triggered when she clicks "Click for a Surprise" inside the card
+      function revealSurprise() {
+        document.getElementById("raya-song").play();
         document.getElementById("surprise").classList.remove("hidden");
 
-        // 3. Trigger the double-cannon confetti
         const duration = 5 * 1000;
         const animationEnd = Date.now() + duration;
         const defaults = {
